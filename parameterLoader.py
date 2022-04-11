@@ -8,6 +8,7 @@ def argLoader():
     # Network Settings
     # Overall
     parser.add_argument('--dropout', type=float, default=0.1)
+    # operation 的个数，用来 embedding 做表
     parser.add_argument('--n_vocab', type=int, default=5, help='5 | 11')
     parser.add_argument('--PAD', type=int, default=0)
     parser.add_argument('--MASK', type=int, default=1)

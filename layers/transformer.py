@@ -61,6 +61,7 @@ class SelfAttentionBlock(nn.Module):
     def forward(self, x, mask):
         x_ = self.norm(x)
         x_ , attn = self.attn(x_, x_, x_, mask)
+        # 这里是加起来的，有点像残差
         return self.dropout(x_) + x, attn
 
 class SourceAttentionBlock(nn.Module):
@@ -118,6 +119,7 @@ class Encoder(nn.Module):
     def __init__(self, config):
         super(Encoder, self).__init__()
 
+        # EncoderBlock 包括多头 attention 和 layernorm
         self.layers = clones(EncoderBlock(config), config.n_layers)
         self.norms = clones(nn.LayerNorm(config.d_model), config.n_layers)
 
@@ -176,6 +178,7 @@ class SemanticEmbedding(nn.Module):
         self.d_model = config.d_model
 
     def forward(self, x):
+        # 这边得到 embedding 后，还乘上了一个 \sqrt{d_k}
         return self.w2e(x) * math.sqrt(self.d_model)
 
 class Embeddings(nn.Module):

@@ -38,12 +38,14 @@ class PairWiseLearning(nn.Module):
         super(PairWiseLearning, self).__init__()
         # Shared Embedding Layer
         self.opEmb = SemanticEmbedding(config.graph_encoder)
+        # emebdding 向量有一定几率被 dropout
         self.dropout_op = nn.Dropout(p=config.dropout)
 
         # 2 GraphEncoder for X and Y
         self.graph_encoder = GraphEncoder(config.graph_encoder)
 
         # Cross Attention between X and Y
+        # embedding table 的大小为 2，代表 0 和 1
         self.segEmb = TokenTypeEmbedding(config.cross_attention)
         self.dropout_seg = nn.Dropout(p=config.dropout)
         self.cross_attention = Encoder(config.cross_attention)
@@ -57,6 +59,7 @@ class PairWiseLearning(nn.Module):
 
         segX = torch.zeros_like(X).long()
         segY = torch.ones_like(Y).long()
+        # 有点类似 position emb
         seg_x = self.dropout_seg(self.segEmb(segX))
         seg_y = self.dropout_seg(self.segEmb(segY))
 
